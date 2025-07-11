@@ -61,7 +61,7 @@
     z-index : 10; /* 별, 성운 위에 올리되 별 SVG 위에는 두지 않음 */
 
     /* 중앙은 투명, 가장자리는 점점 어두워지는 radial-gradient */
-    background : radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%);
+    background : radial-gradient(circle at 50% 50%, rgba(0.1,0.1,0.1,0.3) 60%, rgba(0,0,0,0.55) 100%);
 }
 
 /* 원형 별들(fixed) */
@@ -71,14 +71,11 @@
     z-index : 1;
     pointer-events : none;
     background :
-        radial-gradient(circle at 15% 20%, #e9e7ea 0 2.2px, transparent 3px),
-        radial-gradient(circle at 80% 65%, #e9e7e9 0 1.8px, transparent 2.5px),
-        radial-gradient(circle at 40% 80%, #e9e7e8 0 1.2px, transparent 2.2px),
-        radial-gradient(circle at 70% 30%, #e9e7ea 0 2px, transparent 3px),
-        repeating-radial-gradient(circle at 20% 30%, #e9e7ea 0 0.7px, transparent 1.5px 100%),
-        repeating-radial-gradient(circle at 70% 80%, #e9e7e9 0 0.6px, transparent 1.2px 100%),
-        repeating-radial-gradient(circle at 40% 60%, #e9e7e8 0 0.8px, transparent 1.2px 100%),
-        repeating-radial-gradient(circle at 85% 15%, #e9e7e9 0 0.6px, transparent 1.2px 100%);
+        radial-gradient(circle at 80% 65%, #fffdfe 0 1.8px, transparent 2.5px),
+        radial-gradient(circle at 40% 80%, #cdb2a3 0 1.2px, transparent 2.2px),
+        radial-gradient(circle at 70% 30%, #cdb2a3 0 2px, transparent 3px),
+        repeating-radial-gradient(circle at 20% 30%, #fffdfe 0 0.7px, transparent 1.5px 100%),
+        repeating-radial-gradient(circle at 70% 80%, #fffdfe 0 0.6px, transparent 1.2px 100%),
     opacity : 0.85;
 }
 
@@ -96,19 +93,37 @@
         radial-gradient(ellipse at 30% 60%, #8a739f55 0%, transparent 70%),
         radial-gradient(ellipse at 77% 42%, #969fef44 0%, transparent 80%),
         radial-gradient(ellipse at 50% 80%, #53609444 0%, transparent 80%);
-    filter : blur(32px);
+    filter : blur(15px);
     opacity : 0.97;
 }
 
 /* 다이아몬드 별 SVG 스타일 */
 .diamond-star 
 {
-    position : absolute;
-    z-index : 2;
-    pointer-events : none;
-    filter : drop-shadow(0 0 10px #e9e7ea) drop-shadow(0 0 6px #969fef88);
-    animation : twinkle_animation 2.7s infinite alternate;
+    filter : drop-shadow(0 0 10px #e9e7ea) drop-shadow(0 0 6px #cdb2a3);
 }
+
+/* 원형 별들 */
+.diamond-star,
+.circle-star 
+{
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    will-change: transform;
+    /* 별 반짝임 효과 */
+    animation: twinkle_animation 2.7s infinite alternate;
+    transition: opacity 0.6s;
+}
+
+
+@keyframes moveStar 
+{
+    0%   { transform: translate(0,0) rotate(var(--angle,0deg)); }
+    100% { transform: translate(var(--move-x,0px), var(--move-y,0px)) rotate(var(--angle,0deg)); }
+}
+
+
 
 /* 별 반짝임 효과 */
 @keyframes twinkle_animation
@@ -161,13 +176,3 @@
     opacity : 0.55;
 }
 
-/* 원형 별들 */
-.circle-star 
-{
-    position : absolute;
-    z-index : 2;
-    pointer-events : none;
-    filter : drop-shadow(0 0 5px #e9e7ea);
-    animation : twinkle_animation 3s infinite alternate;
-    transition : opacity 0.6s;
-}
