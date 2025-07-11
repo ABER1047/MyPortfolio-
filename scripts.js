@@ -1,7 +1,12 @@
-// ¸ğµç ¸®¼Ò½º(ÀÌ¹ÌÁö, ºñµğ¿À µî)°¡ ·ÎµåµÈ ÈÄ ½ÇÇà
+// MainBackground
+const mainBackground = document.querySelector('.MainBackground');
+
+
+// ëª¨ë“  ë¦¬ì†ŒìŠ¤ ë¡œë“œëœ í›„ ì‹¤í–‰
 window.addEventListener('load', function() 
 {
-    // MainBackground Å¬·¡½º¸¦ °¡Áø div ¿ä¼Ò ¼±ÅÃ
-    var mainBackground = document.querySelector('.MainBackground');
-    mainBackground.classList.add('loaded');
+    // ë°°ê²½ìƒ‰ì„ ë³€ê²½í•˜ëŠ” í´ë˜ìŠ¤ ì¶”ê°€
+    mainBackground.classList.add('MainBackground--loaded');
+    
+    debug_log("loaded!");
 });
