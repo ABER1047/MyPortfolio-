@@ -2,6 +2,8 @@
 const mainBackground = document.querySelector('.MainBackground');
 const spaceBackground = document.querySelector(".SpaceBackground");
 const cameraShutterIcon = document.querySelector(".CameraShutterIcon");
+//모바일 체크
+var isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
 // 모든 리소스 로드된 후 실행
 window.addEventListener('load', function()
@@ -73,7 +75,7 @@ window.addEventListener('load', function()
         var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         if (star_type)
         {
-            var size = 12 * irandom_range(60, 130) / 100; // 7.2~15.6px
+            var size = (isMobile ? 2 : 1) * 12 * irandom_range(60, 130) / 100; // 7.2~15.6px
             var angle = irandom_range(0, 359);
             var shape = diamond_stars_shape_info[irandom_range(0, diamond_stars_shape_info.length - 1)];
 
@@ -117,7 +119,7 @@ window.addEventListener('load', function()
         }
         else
         {
-            var size = irandom_range(10, 25) / 10; // 1.0~2.5px
+            var size = (isMobile ? 2 : 1) * irandom_range(10, 25) / 10; // 1.0~2.5px
             svg.setAttribute("class", "circle-star");
             svg.setAttribute("width", size);
             svg.setAttribute("height", size);
@@ -153,8 +155,13 @@ window.addEventListener('load', function()
         }
     }
 
+
+
+    
+
+
     // 다이아몬드 별 생성
-    var tmp_ratio = Math.pow(round(Math.max(space_width, space_height) / 400),2);
+    var tmp_ratio = (isMobile ? 0.15 : 1) * Math.pow(round(Math.max(space_width, space_height) / 450),2);
     var diamond_stars_num = irandom_range(3, 7) * tmp_ratio*0.5;
     for (var i = 0; i < diamond_stars_num; i++)
     {

@@ -239,7 +239,7 @@
     transform : translateY(-50%) scaleX(-1) scaleY(-1);
 }
 
-/* 셔터 모양(ㄴ, ㄱ) 스타일 */
+/* 셔터 모양 스타일 */
 .CameraShutterIcon .shutter-corner 
 {
     stroke : #f3ead3;
