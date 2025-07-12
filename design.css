@@ -123,14 +123,12 @@
     transition : opacity 0.6s;
 }
 
-
+/* 별 이동 */
 @keyframes moveStar 
 {
     0%   { transform: translate(0,0) rotate(var(--angle,0deg)); }
     100% { transform: translate(var(--move-x,0px), var(--move-y,0px)) rotate(var(--angle,0deg)); }
 }
-
-
 
 /* 별 반짝임 효과 */
 @keyframes twinkle_animation
@@ -216,7 +214,7 @@
 }
 
 
-/* 셔터 모양(ㄴ, ㄱ) SVG는 크기 고정, 위치만 CameraShutterIcon의 크기에 따라 이동 */
+/* 셔터 모양(ㄴ, ㄱ) 선 두께는 고정, 셔터 사이 간격은 CameraShutterIcon의 width, height조절을 통해 자동 조정됨 */
 .CameraShutterIcon .shutter-arm 
 {
     position : absolute;
