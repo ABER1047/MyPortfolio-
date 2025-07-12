@@ -1,25 +1,33 @@
 // MainBackground
-const mainBackground = document.querySelector('.MainBackground');
+const mainBackground = document.querySelector(".MainBackground");
 const spaceBackground = document.querySelector(".SpaceBackground");
 const cameraShutterIcon = document.querySelector(".CameraShutterIcon");
+const window_width = window.innerWidth;
+const window_height = window.innerHeight;
+debug_log(window_width+"x"+window_height);
+
 //모바일 체크
 var isMobile = /Mobi|Android/i.test(navigator.userAgent);
+debug_log("isMobile : "+isMobile);
 
-// 모든 리소스 로드된 후 실행
-window.addEventListener('load', function()
+// 모든 리소스 로드된 후 3초뒤 나머지 로드
+window.addEventListener('load', () => setTimeout(loadSystems, 3000));
+
+// load Systems
+function loadSystems()
 {
     // 메인 배경색을 변경
-    mainBackground.classList.add('MainBackground--loaded');
+    mainBackground.classList.add("MainBackground--loaded");
 
     // SpaceBackground 크기 변경
-    spaceBackground.classList.add('SpaceBackground--loaded');
+    spaceBackground.classList.add("SpaceBackground--loaded");
 
     // CameraShutterIcon 크기 변경
-    cameraShutterIcon.classList.add('CameraShutterIcon--loaded');
+    cameraShutterIcon.classList.add("CameraShutterIcon--loaded");
     
 
     
-
+    //#region Shutter Icon
     // 셔터 모양(왼쪽)
     var svgNS = "http://www.w3.org/2000/svg";
     var leftArm = document.createElementNS(svgNS, "svg");
@@ -45,15 +53,15 @@ window.addEventListener('load', function()
 
     cameraShutterIcon.appendChild(leftArm);
     cameraShutterIcon.appendChild(rightArm);
+    //#endregion
 
 
 
 
-
-
+    //#region SpaceBackground(stars, background... etc)
     // 별 배경 생성
-    var space_width = window.innerWidth;
-    var space_height = window.innerHeight;
+    var space_width = window_width;
+    var space_height = window_height;
 
     // 다이아몬드 별 기본 세팅값
     var diamond_stars_shape_info = [
@@ -69,8 +77,9 @@ window.addEventListener('load', function()
     function create_star(star_type)
     {
         // 절대 px 단위 위치로 생성
-        var left = irandom_range(0, space_width);
-        var top = irandom_range(0, space_height);
+        var radius = 600;
+        var left = space_width*0.5+irandom_range(-radius, radius);
+        var top = space_height*0.5+irandom_range(-radius, radius);
 
         var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         if (star_type)
@@ -186,16 +195,30 @@ window.addEventListener('load', function()
         for (var i = 0; i < movingStars.length; i++)
         {
             var star = movingStars[i];
+            var tmp_size = star.size;
 
             // 별 위치 이동 (절대 좌표)
             star.x += star.vx;
             star.y += star.vy;
 
             // 별이 화면 밖(브라우저 기준)으로 나가면 wrap-around
-            if (star.x < 0) star.x = window.innerWidth;
-            else if (star.x > window.innerWidth) star.x = 0;
-            if (star.y < 0) star.y = window.innerHeight;
-            else if (star.y > window.innerHeight) star.y = 0;
+            if (star.x <= -tmp_size*2)
+            {
+                star.x = window_width+tmp_size*2;
+            }
+            else if (star.x >= window_width+tmp_size*2) 
+            {
+                star.x = -tmp_size*2;
+            }
+            
+            if (star.y <= -tmp_size*2) 
+            {
+                star.y = window_height+tmp_size*2;
+            }
+            else if (star.y >= window_height+tmp_size*2) 
+            {
+                star.y = -tmp_size*2;
+            }
 
             // SpaceBackground 중심 기준 상대 좌표로 변환해서 별 위치 적용
             var rel_x = star.x - bg_center_x + rect.width / 2;
@@ -204,17 +227,20 @@ window.addEventListener('load', function()
             star.el.style.left = rel_x + "px";
             star.el.style.top = rel_y + "px";
         }
+        
+        
+        show_fps(true); //테스트용
         requestAnimationFrame(move_stars);
     }
 
     move_stars();
-
+    //#endregion
 
     
 
     debug_log("loaded!");
     debug_log("starsnum : "+movingStars.length);
-});
+}
 
 
 
