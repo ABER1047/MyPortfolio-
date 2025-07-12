@@ -155,14 +155,14 @@ window.addEventListener('load', function()
 
     // 다이아몬드 별 생성
     var tmp_ratio = Math.pow(round(Math.max(space_width, space_height) / 400),2);
-    var diamond_stars_num = irandom_range(3, 7) * tmp_ratio;
+    var diamond_stars_num = irandom_range(3, 7) * tmp_ratio*0.5;
     for (var i = 0; i < diamond_stars_num; i++)
     {
         create_star(true);
     }
 
     // 원형 별 생성
-    var circle_stars_num = 20 * tmp_ratio*0.5;
+    var circle_stars_num = 20 * tmp_ratio;
     for (var i = 0; i < circle_stars_num; i++)
     {
         create_star(false);
@@ -206,10 +206,13 @@ window.addEventListener('load', function()
     
 
     debug_log("loaded!");
+    debug_log("starsnum : "+movingStars.length);
 });
 
 
 
+
+// 테스트용
 document.body.addEventListener('wheel', onWheel);
 
 function onWheel(e)
@@ -219,22 +222,20 @@ function onWheel(e)
     var maxSize = 1920;
 
     // 현재 크기
-    var width = spaceBackground.offsetWidth;
-    var height = spaceBackground.offsetHeight;
+    var size = parseInt(getComputedStyle(spaceBackground).width,10);
+    debug_log("size : "+size);
 
     if (e.deltaY < 0)
     {
-        width = Math.min(width + 100, maxSize);
-        height = Math.min(height + 100, maxSize);
+        size = Math.min(size + 100, maxSize);
     }
     else
     {
-        width = Math.max(width - 100, minSize);
-        height = Math.max(height - 100, minSize);
+        size = Math.max(size - 100, minSize);
     }
 
-    spaceBackground.style.width = width + "px";
-    spaceBackground.style.height = height + "px";
-    cameraShutterIcon.style.width = width + "px";
-    cameraShutterIcon.style.height = height + "px";
+    spaceBackground.style.width = size + "px";
+    spaceBackground.style.height = size + "px";
+    cameraShutterIcon.style.width = size + "px";
+    cameraShutterIcon.style.height = size + "px";
 }
