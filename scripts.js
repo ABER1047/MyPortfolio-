@@ -4,11 +4,17 @@ const spaceBackground = document.querySelector(".SpaceBackground");
 const cameraShutterIcon = document.querySelector(".CameraShutterIcon");
 const window_width = window.innerWidth;
 const window_height = window.innerHeight;
+var space_bg_center_x = window_width*0.5; //SpaceBackground 중심점
+var space_bg_center_y = window_height*0.5;
 debug_log(window_width+"x"+window_height);
 
 //모바일 체크
 var isMobile = /Mobi|Android/i.test(navigator.userAgent);
 debug_log("isMobile : "+isMobile);
+
+
+
+
 
 // 모든 리소스 로드된 후 3초뒤 나머지 로드
 window.addEventListener('load', () => setTimeout(loadSystems, 3000));
@@ -77,9 +83,10 @@ function loadSystems()
     function create_star(star_type)
     {
         // 절대 px 단위 위치로 생성
-        var radius = 600;
-        var left = space_width*0.5+irandom_range(-radius, radius);
-        var top = space_height*0.5+irandom_range(-radius, radius);
+        var radius = 500*(isMobile ? 0.7 : 1);
+        var left = space_bg_center_x + irandom_range(0, radius)*irandom_return();
+        var top = space_bg_center_y + irandom_range(0, radius)*irandom_return();
+        debug_log("star start pos : "+left+","+top);
 
         var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         if (star_type)
@@ -189,8 +196,8 @@ function loadSystems()
     {
         // SpaceBackground의 중심 좌표 계산
         var rect = spaceBackground.getBoundingClientRect();
-        var bg_center_x = rect.left + rect.width / 2;
-        var bg_center_y = rect.top + rect.height / 2;
+        space_bg_center_x = rect.left + rect.width / 2;
+        space_bg_center_y = rect.top + rect.height / 2;
 
         for (var i = 0; i < movingStars.length; i++)
         {
@@ -202,34 +209,46 @@ function loadSystems()
             star.y += star.vy;
 
             // 별이 화면 밖(브라우저 기준)으로 나가면 wrap-around
+            var check_outter_space = false;
             if (star.x <= -tmp_size*2)
             {
                 star.x = window_width+tmp_size*2;
+                check_outter_space = true;
             }
             else if (star.x >= window_width+tmp_size*2) 
             {
                 star.x = -tmp_size*2;
+                check_outter_space = true;
             }
             
             if (star.y <= -tmp_size*2) 
             {
                 star.y = window_height+tmp_size*2;
+                check_outter_space = true;
             }
             else if (star.y >= window_height+tmp_size*2) 
             {
                 star.y = -tmp_size*2;
+                check_outter_space = true;
             }
+            
+            
 
             // SpaceBackground 중심 기준 상대 좌표로 변환해서 별 위치 적용
-            var rel_x = star.x - bg_center_x + rect.width / 2;
-            var rel_y = star.y - bg_center_y + rect.height / 2;
+            var rel_x = star.x - space_bg_center_x + rect.width / 2;
+            var rel_y = star.y - space_bg_center_y + rect.height / 2;
+            
+            if (check_outter_space)
+            {
+                debug_log("star repos : "+rel_x+","+rel_y);
+            }
 
             star.el.style.left = rel_x + "px";
             star.el.style.top = rel_y + "px";
         }
         
         
-        show_fps(true); //테스트용
+        //show_fps(true); //테스트용
         requestAnimationFrame(move_stars);
     }
 
