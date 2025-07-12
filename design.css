@@ -5,7 +5,7 @@
 /* star (inner) : #fffdfe */
 /* star (outter) : #cdb2a3 */
 /* black : #0d0b0f */
-/* moon : #c5bfae */
+/* moon : #f3ead3 */
 /* gray line : #c9cbcd */
 
 
@@ -35,8 +35,8 @@
 /* SpaceBackground 스타일 */
 .SpaceBackground 
 {
-    width : 400px;
-    height : 400px;
+    width : 0px;
+    height : 0px;
 
     position : fixed;
     left : 50%;
@@ -49,6 +49,13 @@
     
     transform-origin : center center;
     transform : translate(-50%, -50%);
+}
+
+.SpaceBackground--loaded
+{
+    width : 400px;
+    height : 400px;
+    transition: width 0.85s ease-in-out, height 0.85s ease-out;
 }
 
 /* 비네팅(가장자리 어둡게) 효과 추가 */
@@ -75,8 +82,8 @@
         radial-gradient(circle at 40% 80%, #cdb2a3 0 1.2px, transparent 2.2px),
         radial-gradient(circle at 70% 30%, #cdb2a3 0 2px, transparent 3px),
         repeating-radial-gradient(circle at 20% 30%, #fffdfe 0 0.7px, transparent 1.5px 100%),
-        repeating-radial-gradient(circle at 70% 80%, #fffdfe 0 0.6px, transparent 1.2px 100%),
-    opacity : 0.85;
+        repeating-radial-gradient(circle at 70% 80%, #fffdfe 0 0.6px, transparent 1.2px 100%);
+    opacity : 1;
 }
 
 /* 성운 효과 */
@@ -107,13 +114,13 @@
 .diamond-star,
 .circle-star 
 {
-    position: absolute;
-    z-index: 2;
-    pointer-events: none;
-    will-change: transform;
+    position : absolute;
+    z-index : 2;
+    pointer-events : none;
+    will-change : transform;
     /* 별 반짝임 효과 */
-    animation: twinkle_animation 2.7s infinite alternate;
-    transition: opacity 0.6s;
+    animation : twinkle_animation 2.7s infinite alternate;
+    transition : opacity 0.6s;
 }
 
 
@@ -140,7 +147,7 @@
     width : 220px; height : 130px;
     transform : translate(-48%, -50%) rotate(-8deg);
     background : radial-gradient(ellipse at 50% 40%, #b99eb6cc 0%, #8a739f77 60%, transparent 100%);
-    filter : blur(22px);
+    filter : blur(27px);
     opacity : 0.65;
     z-index : 1;
     pointer-events : none;
@@ -176,3 +183,66 @@
     opacity : 0.55;
 }
 
+
+
+
+
+
+
+/* 카메라 셔터 모양 */
+.CameraShutterIcon 
+{
+    position : absolute;
+    left : 50%;
+    top : 50%;
+    width : 20px;   /* 셔터 사이 간격 */
+    height : 0px;
+    transform : translate(-50%, -50%);
+    pointer-events : none;
+    z-index : 30;
+    /* 배경 없음, 오직 셔터 모양만 표시 */
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    mix-blend-mode : difference;
+
+    transition: width 0.85s ease-out, height 0.85s ease-out;
+}
+
+.CameraShutterIcon--loaded
+{
+    width : 400px;   /* 원하는 간격(중심에서 셔터모양까지의 거리*2) */
+    height : 400px;
+}
+
+
+/* 셔터 모양(ㄴ, ㄱ) SVG는 크기 고정, 위치만 CameraShutterIcon의 크기에 따라 이동 */
+.CameraShutterIcon .shutter-arm 
+{
+    position : absolute;
+    width : 60px;   /* 셔터모양 자체 크기(고정) */
+    height : 60px;
+    pointer-events : none;
+}
+
+.CameraShutterIcon .shutter-arm.left 
+{
+    left : -10%;
+    top : 100%;
+    transform : translateY(-50%);
+}
+
+.CameraShutterIcon .shutter-arm.right 
+{
+    right : -10%;
+    top : 0%;
+    transform : translateY(-50%) scaleX(-1) scaleY(-1);
+}
+
+/* 셔터 모양(ㄴ, ㄱ) 스타일 */
+.CameraShutterIcon .shutter-corner 
+{
+    stroke : #f3ead3;
+    stroke-width : 10;
+    fill : none;
+}
