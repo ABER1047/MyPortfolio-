@@ -179,32 +179,32 @@ function loadSystems()
             star.x += star.vx;
             star.y += star.vy;
 
-            var check_outter_space = false;
+            var check_outer_space = false;
             if (star.x <= -tmp_size * 2)
             {
                 star.x = window_width + tmp_size * 2;
-                check_outter_space = true;
+                check_outer_space = true;
             }
             else if (star.x >= window_width + tmp_size * 2)
             {
                 star.x = -tmp_size * 2;
-                check_outter_space = true;
+                check_outer_space = true;
             }
             if (star.y <= -tmp_size * 2)
             {
                 star.y = window_height + tmp_size * 2;
-                check_outter_space = true;
+                check_outer_space = true;
             }
             else if (star.y >= window_height + tmp_size * 2)
             {
                 star.y = -tmp_size * 2;
-                check_outter_space = true;
+                check_outer_space = true;
             }
 
             var rel_x = star.x - space_bg_center_x + rect.width / 2;
             var rel_y = star.y - space_bg_center_y + rect.height / 2;
 
-            if (check_outter_space) debug_log("star repos : " + rel_x + "," + rel_y);
+            if (check_outer_space) debug_log("star repos : " + rel_x + "," + rel_y);
 
             star.el.style.left = rel_x + "px";
             star.el.style.top = rel_y + "px";
@@ -221,7 +221,7 @@ function loadSystems()
 
 
 
-// 테스트용
+// 우주배경 테스트용
 document.body.addEventListener('wheel', onWheel);
 
 function onWheel(e)
@@ -248,3 +248,18 @@ function onWheel(e)
     cameraShutterIcon.style.width = size + "px";
     cameraShutterIcon.style.height = size + "px";
 }
+
+
+// PhotoCard 테스트용
+document.addEventListener('click', function(event) {
+  const card = document.querySelector('.PhotoCard');
+  if (!card) return;
+
+  // 마우스 좌표 얻기
+  const mouseX = event.clientX;
+  const mouseY = event.clientY;
+
+  // 요소를 마우스 위치의 중앙에 맞춰 이동
+  card.style.left = mouseX + 'px';
+  card.style.top = mouseY + 'px';
+});
