@@ -8,6 +8,15 @@ var space_bg_center_x = window_width*0.5; // SpaceBackground 중심점
 var space_bg_center_y = window_height*0.5;
 debug_log(window_width + "x" + window_height);
 
+// 기타 잡다한 변수 선언
+var movingStars = []; // 생성된 별 요소 저장용
+var diamond_stars_shape_info = [ // 다이아몬드 별 외형
+        { points1 : "16,2 20,16 16,30 12,16", points2 : "2,16 16,12 30,16 16,20" },
+        { points1 : "16,4 19,16 16,28 13,16", points2 : "4,16 16,13 28,16 16,19" },
+        { points1 : "16,6 18,16 16,26 14,16", points2 : "6,16 16,14 26,16 16,18" }
+    ];
+
+
 // 모바일 체크
 var isMobile = /Mobi|Android/i.test(navigator.userAgent);
 debug_log("isMobile : " + isMobile);
@@ -18,9 +27,11 @@ window.addEventListener('load', () => setTimeout(loadSystems, 3000));
 // load Systems
 function loadSystems()
 {
+    //#region 로드된 요소들 css 애니메이션 재생
     mainBackground.classList.add("MainBackground--loaded");
     spaceBackground.classList.add("SpaceBackground--loaded");
     cameraShutterIcon.classList.add("CameraShutterIcon--loaded");
+    //#endregion
 
     //#region Shutter Icon
     var svgNS = "http://www.w3.org/2000/svg";
@@ -52,15 +63,88 @@ function loadSystems()
     var space_width = window_width;
     var space_height = window_height;
 
-    var diamond_stars_shape_info = [
-        { points1 : "16,2 20,16 16,30 12,16", points2 : "2,16 16,12 30,16 16,20" },
-        { points1 : "16,4 19,16 16,28 13,16", points2 : "4,16 16,13 28,16 16,19" },
-        { points1 : "16,6 18,16 16,26 14,16", points2 : "6,16 16,14 26,16 16,18" }
-    ];
 
-    var movingStars = [];
+    // 별 개수 비율 결정
+    var tmp_ratio = (isMobile ? 0.15 : 1) * Math.pow(round(Math.max(space_width, space_height) / 450), 2);
+    var diamond_stars_num = irandom_range(3, 7) * tmp_ratio * 0.5;
+    var circle_stars_num = 20 * tmp_ratio;
 
-    // 별 생성 function
+    for (var i = 0; i < diamond_stars_num; i++)
+    {
+        create_star(true);
+    }
+
+    for (var i = 0; i < circle_stars_num; i++)
+    {
+        create_star(false);
+    }
+
+    // 별 위치 갱신 및 적용
+    function move_stars()
+    {
+        var rect = spaceBackground.getBoundingClientRect();
+        space_bg_center_x = rect.left + rect.width / 2;
+        space_bg_center_y = rect.top + rect.height / 2;
+
+        for (var i = 0; i < movingStars.length; i++)
+        {
+            var star = movingStars[i];
+            var tmp_size = star.size;
+
+            star.x += star.vx;
+            star.y += star.vy;
+
+            var check_outer_space = false;
+            if (star.x <= -tmp_size * 2)
+            {
+                star.x = window_width + tmp_size * 2;
+                check_outer_space = true;
+            }
+            else if (star.x >= window_width + tmp_size * 2)
+            {
+                star.x = -tmp_size * 2;
+                check_outer_space = true;
+            }
+            if (star.y <= -tmp_size * 2)
+            {
+                star.y = window_height + tmp_size * 2;
+                check_outer_space = true;
+            }
+            else if (star.y >= window_height + tmp_size * 2)
+            {
+                star.y = -tmp_size * 2;
+                check_outer_space = true;
+            }
+
+            var rel_x = star.x - space_bg_center_x + rect.width / 2;
+            var rel_y = star.y - space_bg_center_y + rect.height / 2;
+
+            if (check_outer_space) debug_log("star repos : " + rel_x + "," + rel_y);
+
+            star.el.style.left = rel_x + "px";
+            star.el.style.top = rel_y + "px";
+        }
+        requestAnimationFrame(move_stars);
+    }
+
+    move_stars();
+    //#endregion
+    
+    
+    //#region 포토 카드 모양 생성
+    create_photo_card("imgs/project_wak_preview.mp4", "ProjectName", "20xx.xx.xx");
+    //#endregion
+
+    debug_log("loaded!");
+    debug_log("starsnum : " + movingStars.length);
+}
+
+
+
+
+//#region Scripts
+
+    // 별 생성 script function
     function create_star(star_type)
     {
         // 별 생성 반경
@@ -148,75 +232,54 @@ function loadSystems()
             });
         }
     }
-
-    // 별 개수 비율 결정
-    var tmp_ratio = (isMobile ? 0.15 : 1) * Math.pow(round(Math.max(space_width, space_height) / 450), 2);
-    var diamond_stars_num = irandom_range(3, 7) * tmp_ratio * 0.5;
-    var circle_stars_num = 20 * tmp_ratio;
-
-    for (var i = 0; i < diamond_stars_num; i++)
+    
+    
+    // 포토 카드 생성 script function
+    function create_photo_card(src, cardname, carddate)
     {
-        create_star(true);
+        // PhotoCard(parents)
+        var card = document.createElement('div');
+        card.className = 'PhotoCard';
+
+        // PhotoCardOuter
+        var outer = document.createElement('div');
+        outer.className = 'PhotoCardOuter';
+
+        // PhotoCardTitle
+        var title = document.createElement('div');
+        title.className = 'PhotoCardTitle';
+        title.textContent = cardname; // 사용자가 전달한 타이틀
+
+        // PhotoCardDate
+        var date = document.createElement('div');
+        date.className = 'PhotoCardDate';
+        date.textContent = carddate; // 사용자가 전달한 날짜
+
+        outer.appendChild(title);
+        outer.appendChild(date);
+        card.appendChild(outer);
+
+        // PhotoCardInner--outline
+        var  outline = document.createElement('div');
+        outline.className = 'PhotoCardInner--outline';
+        card.appendChild(outline);
+
+        // PhotoCardInner(video)
+        const video = document.createElement('video');
+        video.className = 'PhotoCardInner';
+        video.src = src;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        card.appendChild(video);
+        
+        //create a full element
+        document.body.appendChild(card);
+        
+        debug_log("card");
+        return card;
     }
-
-    for (var i = 0; i < circle_stars_num; i++)
-    {
-        create_star(false);
-    }
-
-    // 별 위치 갱신 및 적용
-    function move_stars()
-    {
-        var rect = spaceBackground.getBoundingClientRect();
-        space_bg_center_x = rect.left + rect.width / 2;
-        space_bg_center_y = rect.top + rect.height / 2;
-
-        for (var i = 0; i < movingStars.length; i++)
-        {
-            var star = movingStars[i];
-            var tmp_size = star.size;
-
-            star.x += star.vx;
-            star.y += star.vy;
-
-            var check_outer_space = false;
-            if (star.x <= -tmp_size * 2)
-            {
-                star.x = window_width + tmp_size * 2;
-                check_outer_space = true;
-            }
-            else if (star.x >= window_width + tmp_size * 2)
-            {
-                star.x = -tmp_size * 2;
-                check_outer_space = true;
-            }
-            if (star.y <= -tmp_size * 2)
-            {
-                star.y = window_height + tmp_size * 2;
-                check_outer_space = true;
-            }
-            else if (star.y >= window_height + tmp_size * 2)
-            {
-                star.y = -tmp_size * 2;
-                check_outer_space = true;
-            }
-
-            var rel_x = star.x - space_bg_center_x + rect.width / 2;
-            var rel_y = star.y - space_bg_center_y + rect.height / 2;
-
-            if (check_outer_space) debug_log("star repos : " + rel_x + "," + rel_y);
-
-            star.el.style.left = rel_x + "px";
-            star.el.style.top = rel_y + "px";
-        }
-        requestAnimationFrame(move_stars);
-    }
-
-    move_stars();
-
-    debug_log("loaded!");
-    debug_log("starsnum : " + movingStars.length);
-}
+//#endregion
 
 
 
