@@ -1,7 +1,8 @@
 // MainBackground
-const mainBackground = document.querySelector('.MainBackground');
-const spaceBackground = document.querySelector('.SpaceBackground');
-const cameraShutterIcon = document.querySelector('.CameraShutterIcon');
+const mainBackground = document.querySelector(".MainBackground");
+const spaceBackground = document.querySelector(".SpaceBackground");
+const cameraShutterIcon = document.querySelector(".CameraShutterIcon");
+const Moon = document.querySelector(".Moon");
 const window_width = window.innerWidth;
 const window_height = window.innerHeight;
 var space_bg_center_x = window_width*0.5; // SpaceBackground 중심점
@@ -31,6 +32,10 @@ function loadSystems()
     mainBackground.classList.add("MainBackground--loaded");
     spaceBackground.classList.add("SpaceBackground--loaded");
     cameraShutterIcon.classList.add("CameraShutterIcon--loaded");
+    
+    //초기 세팅 
+    syncSVGsize(Moon.offsetWidth); // 달 crop용 SVG 크기를 moon 사이즈랑 동기화
+    debug_log(Moon.offsetWidth);
     //#endregion
 
     //#region Shutter Icon
@@ -132,7 +137,7 @@ function loadSystems()
     
     
     //#region 포토 카드 모양 생성
-    create_photo_card("imgs/project_wak_preview.mp4", "ProjectName", "20xx.xx.xx");
+    //create_photo_card("imgs/project_wak_preview.mp4", "ProjectName", "20xx.xx.xx");
     //#endregion
 
     debug_log("loaded!");
@@ -279,6 +284,22 @@ function loadSystems()
         debug_log("card");
         return card;
     }
+    
+    
+    // 달 crop용 SVG 크기를 moon 사이즈랑 동기화
+    function syncSVGsize(size) 
+    {
+        var tmp_mask_rect = document.getElementById('moon-rect');
+        tmp_mask_rect.setAttribute('width', size);
+        tmp_mask_rect.setAttribute('height', size);
+        var tmp_mask_rect = document.getElementById('moon-crop');
+        tmp_mask_rect.setAttribute('cx', size / 2);
+        tmp_mask_rect.setAttribute('cy', size / 2);
+        tmp_mask_rect.setAttribute('r', size*0.5); // 예시: 구멍은 전체 너비의 1/2
+    }
+
+    // .moon의 크기가 바뀔 때마다 호출
+    window.addEventListener('resize', syncSVGsize, Moon.offsetWidth);
 //#endregion
 
 

@@ -334,3 +334,21 @@
     text-align: right;
     font-size : 14px;
 }
+
+
+
+/* 달 */
+.Moon
+{
+    position: absolute;
+    background: #f3ead3;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    mask: url(#moon-crop);
+    -webkit-mask: url(#moon-crop);
+}
+
